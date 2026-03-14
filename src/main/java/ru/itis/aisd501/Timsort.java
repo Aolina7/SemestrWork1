@@ -5,12 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Timsort {
+    public int iterations = 0;
+
     //расчёт минимального размера подмассива, т.е. minRun
-    public static int getMinrun(int n) {
+    public int getMinrun(int n) {
         // n = N, размер входного массива.
         int r = 0;
         // 2^6 = 64.
         while (n >= 64) {
+            iterations++;
             r |= (n & 1);
             // Если среди младших битов n имеется хотя бы один ненулевой бит, переменная r станет равна 1.
             n >>= 1;
@@ -20,7 +23,7 @@ public class Timsort {
     }
 
     //основной метод сортировки
-    public static void timsort(int[] arr) {
+    public void timsort(int[] arr) {
         int n = arr.length;
         int minRun = getMinrun(n);
         List<int[]> runs = new ArrayList<>();
@@ -76,26 +79,31 @@ public class Timsort {
     }
 
     //поиск правой границы, индекса подмассивов
-    public static int findRun(int[] arr, int start, int n) {
+    public int findRun(int[] arr, int start, int n) {
         int end = start + 1;
         if (end == n) return end;
 
+        iterations++;
         //если элементы идут в порядке убывания, то меняем местами
         if (arr[end] < arr[start]) {
             //ищем индекс, до которого элементы идут в порядке убывания
-            while (end < n && arr[end] < arr[end - 1])
+            while (end < n && arr[end] < arr[end - 1]) {
+                iterations++;
                 end++;
+            }
             reverse(arr, start, end - 1);
         } else {
             //ищем индекс, до которого порядок не нарушется
-            while (end < n && arr[end] >= arr[end - 1])
+            while (end < n && arr[end] >= arr[end - 1]) {
+                iterations++;
                 end++;
+            }
         }
         return end;
     }
 
     //обратный порядок массива с l до r
-    public static void reverse(int[] arr, int l, int r) {
+    public void reverse(int[] arr, int l, int r) {
         while (l < r) {
             int temp = arr[l];
             arr[l] = arr[r];
@@ -106,11 +114,12 @@ public class Timsort {
     }
 
     //сортировка вставками для небольших массивов
-    public static void insertionSort(int[] arr, int left, int right) {
+    public void insertionSort(int[] arr, int left, int right) {
         for (int i = left + 1; i <= right; i++) {
             int key = arr[i];
             int j = i - 1;
             while (j >= left && arr[j] > key) {
+                iterations++;
                 arr[j + 1] = arr[j];
                 j--;
             }
@@ -119,14 +128,18 @@ public class Timsort {
     }
 
     //слияние просиходит в исходном массиве!
-    public static void merge(int[] arr, int l, int m, int r) {
+    public void merge(int[] arr, int l, int m, int r) {
         int[] left = Arrays.copyOfRange(arr, l, m + 1);
         int[] right = Arrays.copyOfRange(arr, m + 1, r + 1);
 
         int i = 0, j = 0, k = l;
         while (i < left.length && j < right.length) {
-            if (left[i] <= right[j]) arr[k++] = left[i++];
-            else arr[k++] = right[j++];
+            iterations++;
+            if (left[i] <= right[j]) {
+                arr[k++] = left[i++];
+            } else {
+                arr[k++] = right[j++];
+            }
         }
 
         while (i < left.length) arr[k++] = left[i++];
