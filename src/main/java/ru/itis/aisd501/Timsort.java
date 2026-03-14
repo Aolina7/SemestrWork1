@@ -1,11 +1,15 @@
 package ru.itis.aisd501;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Timsort {
     public static void main(String[] args) {
 
     }
 
-    public static int getMinrun(int n) {
+    //расчёт минимального размера подмассива, т.е. minRun
+    static int getMinrun(int n) {
         // n = N, размер входного массива.
         int r = 0;
         // 2^6 = 64.
@@ -16,6 +20,30 @@ public class Timsort {
         }
         // Теперь переменная n содержит старшие 6 бит N.
         return n + r; // minrun
+    }
+
+    //основной метод сортировки
+    static void timsort(int[] arr) {
+        int n = arr.length;
+        int minRun = getMinrun(n);
+        List<int[]> runs = new ArrayList<>();
+
+        int i = 0;
+        while (i < n) {
+            int runEnd = findRun(arr, i, n);
+            int runLen = runEnd - i;
+
+            //расширяем короткие массивы до minRun с помощью сортировки вставками
+            if (runLen < minRun) {
+                int end = Math.min(i + minRun, n);
+                insertionSort(arr, i, end - 1);
+                runEnd = end;
+            }
+            runs.add(new int[]{i, runEnd});
+            //текущий индекс равен индексу последнего элемента последнего run'а
+            i = runEnd;
+
+        }
     }
 
     //поиск правой границы, индекса подмассивов
@@ -45,6 +73,19 @@ public class Timsort {
             arr[r] = temp;
             l++;
             r--;
+        }
+    }
+
+    //сортировка вставками для небольших массивов
+    static void insertionSort(int[] arr, int left, int right) {
+        for (int i = left + 1; i <= right; i++) {
+            int key = arr[i];
+            int j = i - 1;
+            while (j >= left && arr[j] > key) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = key;
         }
     }
 }
