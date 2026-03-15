@@ -10,22 +10,24 @@ public class Main {
         Test testing = new Test();
         testing.create();
 
+        //считывание данных, расчёт времени и количества итераций
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader("test.txt"));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] array = line.split(" ");
-                int[] arr = new int[array.length];
+                String[] arrayStr = line.split(" ");
+                int[] arr = new int[arrayStr.length];
                 for (int i = 0; i < arr.length; i++) {
-                    arr[i] = Integer.parseInt(array[i]);
+                    arr[i] = Integer.parseInt(arrayStr[i]);
                 }
                 long startTime = System.nanoTime();
                 timSort.timsort(arr);
                 long endTime = System.nanoTime();
-                System.out.println(arr.length + ";" + (endTime - startTime) + ";" + timSort.iterations);
+                System.out.println(arr.length + ";" + (endTime - startTime) + ";" + arr.length + ";" + timSort.iterations);
+                timSort.iterations = 0;
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException();
         }
     }
 }

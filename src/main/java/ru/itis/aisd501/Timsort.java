@@ -13,7 +13,6 @@ public class Timsort {
         int r = 0;
         // 2^6 = 64.
         while (n >= 64) {
-            iterations++;
             r |= (n & 1);
             // Если среди младших битов n имеется хотя бы один ненулевой бит, переменная r станет равна 1.
             n >>= 1;
@@ -43,7 +42,7 @@ public class Timsort {
             //текущий индекс равен индексу последнего элемента последнего run'а
             i = runEnd;
 
-            //слияние двух массивов в один в этом же цикле
+            //слияние двух массивов в один происходит в этом же цикле
             while (runs.size() > 1) {
                 //берёт последние два массива
                 int[] run1 = runs.get(runs.size() - 2);
@@ -78,12 +77,12 @@ public class Timsort {
         }
     }
 
-    //поиск правой границы, индекса подмассивов
+    //поиск правой границы, правого индекса подмассивов
     public int findRun(int[] arr, int start, int n) {
         int end = start + 1;
         if (end == n) return end;
 
-        iterations++;
+
         //если элементы идут в порядке убывания, то меняем местами
         if (arr[end] < arr[start]) {
             //ищем индекс, до которого элементы идут в порядке убывания
@@ -93,7 +92,7 @@ public class Timsort {
             }
             reverse(arr, start, end - 1);
         } else {
-            //ищем индекс, до которого порядок не нарушется
+            //ищем индекс, до которого прямой порядок (возрастающий) не нарушется
             while (end < n && arr[end] >= arr[end - 1]) {
                 iterations++;
                 end++;
@@ -142,7 +141,11 @@ public class Timsort {
             }
         }
 
-        while (i < left.length) arr[k++] = left[i++];
-        while (j < right.length) arr[k++] = right[j++];
+        while (i < left.length) {
+            arr[k++] = left[i++];
+        }
+        while (j < right.length) {
+            arr[k++] = right[j++];
+        }
     }
 }
